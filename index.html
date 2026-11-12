@@ -23,7 +23,8 @@
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
 body{background:var(--night);color:var(--paper);font:400 16px/1.45 var(--display);overflow:hidden}
-.remote body{overflow:auto}
+:is(.remote,.visitor) body{overflow:auto}
+[hidden]{display:none!important}
 p,h1,h2{margin:0}
 #scene{position:fixed;inset:0;width:100%;height:100%;display:block}
 .eyebrow,legend{font:600 .8rem/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
@@ -32,27 +33,32 @@ p,h1,h2{margin:0}
 .tag{position:fixed;top:clamp(16px,3vh,40px);left:clamp(16px,3vw,48px);display:flex;gap:14px;align-items:center;padding:8px 8px 8px 18px;border-radius:99px;background:var(--night)}
 .pill{padding:.45em .95em .45em .75em;border-radius:99px;background:var(--paper);color:var(--ink);font-weight:600;display:flex;align-items:center;gap:.5em}
 .pill::before{content:"";width:.6em;height:.6em;border-radius:50%;background:var(--state)}
-.notice{position:fixed;left:clamp(16px,3vw,48px);bottom:clamp(16px,4vh,48px);max-width:min(46ch,62vw);padding:clamp(18px,2.4vw,36px);
-  background:var(--paper);color:var(--ink);border-radius:20px;border-left:10px solid var(--state);display:none;flex-direction:column;gap:.7rem}
+.notice{position:fixed;left:clamp(16px,3vw,48px);bottom:clamp(16px,4vh,48px);max-width:min(66ch,74vw);padding:clamp(18px,2.4vw,36px);
+  background:var(--paper);color:var(--ink);border-radius:20px;border-left:10px solid var(--state);display:none;align-items:center;gap:clamp(16px,2.2vw,36px)}
 :root:not([data-mode=in]) .notice{display:flex}
 .notice .eyebrow{color:#7a6457}
 .notice h1{font:800 clamp(2.2rem,5.5vw,5.5rem)/1 var(--display);text-wrap:balance;overflow-wrap:anywhere}
 .notice #n-meta{font:600 clamp(1rem,1.6vw,1.6rem)/1.3 var(--mono)}
+.n-text{display:flex;flex-direction:column;gap:.7rem;min-width:0}
+.qr{margin:0;display:flex;flex-direction:column;align-items:center;gap:.5rem;flex:none}
+.qr img{width:clamp(110px,11vw,190px);display:block;image-rendering:pixelated;background:#fff;padding:8px;border-radius:10px}
+.qr figcaption{font:600 .72rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#7a6457;text-align:center;max-width:18ch}
+.badge::before{background:var(--ember)}
 .tools{position:fixed;right:clamp(16px,3vw,48px);bottom:clamp(16px,4vh,48px);display:flex;gap:10px;transition:opacity .4s}
 .tools.idle{opacity:0}
 .tools:focus-within{opacity:1}
 
 /* controls */
 button{font:600 1rem var(--display);border:0;border-radius:12px;padding:.7em 1.1em;cursor:pointer;background:var(--paper);color:var(--ink)}
-:is(button,input,select,summary):focus-visible{outline:3px solid var(--ember);outline-offset:2px}
+:is(button,input,select,textarea,summary,a):focus-visible{outline:3px solid var(--ember);outline-offset:2px}
 .panel{position:fixed;top:0;right:0;bottom:0;width:min(400px,100%);padding:28px 22px;background:var(--night);border-left:1px solid var(--line);
   overflow:auto;display:none;flex-direction:column;gap:18px}
 .panel.open{display:flex}
-.remote .panel{position:static;display:flex;width:auto;max-width:520px;min-height:100%;margin:0 auto;border:0}
-.remote :is(#scene,.tag,.notice,.tools,#b-close,#pair){display:none}
+.remote #panel,.visitor #visit{position:static;display:flex;width:auto;max-width:520px;min-height:100%;margin:0 auto;border:0}
+:is(.remote,.visitor) :is(#scene,.tag,.notice,.tools,#b-close,#pair){display:none}
 .panel h2{font:800 2rem/1.05 var(--display);text-wrap:balance;overflow-wrap:anywhere}
 .sub{color:var(--muted);font:400 .85rem var(--mono)}
-#controls,fieldset,.field,details>div{display:flex;flex-direction:column;gap:10px;min-width:0}
+#controls,fieldset,.field,details>div,form,#inbox{display:flex;flex-direction:column;gap:10px;min-width:0}
 #controls{gap:22px}
 fieldset{border:0;padding:0;margin:0}
 legend{padding:0;margin-bottom:10px}
@@ -62,10 +68,16 @@ legend{padding:0;margin-bottom:10px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chips button[aria-pressed="true"]{background:var(--state);color:#2b1700;border-color:var(--state)}
 label{font-size:.9rem;color:var(--muted)}
-input,select{font:400 1rem var(--display);padding:.7em .8em;border-radius:12px;border:1px solid var(--line);background:#120c0a;color:var(--paper);width:100%;min-width:0}
+input,select,textarea{font:400 1rem var(--display);padding:.7em .8em;border-radius:12px;border:1px solid var(--line);background:#120c0a;color:var(--paper);width:100%;min-width:0}
 input[type=color]{padding:4px;height:46px;flex:0 0 64px}
 .row{display:flex;gap:8px;align-items:center}
 .row button{flex:none}
+textarea{resize:vertical}
+a{color:var(--ember)}
+.send{background:var(--ember);color:#2b1000;border-color:var(--ember)}
+#notes-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+#notes-list li{background:#2e201b;border:1px solid var(--line);border-left:4px solid var(--ember);border-radius:12px;padding:12px 14px;overflow-wrap:anywhere}
+#notes-list span{color:var(--muted);font:400 .85rem var(--mono)}
 details{border-top:1px solid var(--line);padding-top:14px}
 summary{cursor:pointer;font-weight:600}
 details>div{margin-top:12px}
@@ -83,12 +95,19 @@ details>div{margin-top:12px}
 <header class="tag">
   <p class="eyebrow"><span data-name>Yazan</span>'s desk</p>
   <p class="pill" id="pill">In the office</p>
+  <p class="pill badge" id="badge" hidden></p>
 </header>
 
 <section class="notice" aria-live="polite">
-  <p class="eyebrow" id="n-eyebrow"></p>
-  <h1 id="n-where"></h1>
-  <p id="n-meta"></p>
+  <div class="n-text">
+    <p class="eyebrow" id="n-eyebrow"></p>
+    <h1 id="n-where"></h1>
+    <p id="n-meta"></p>
+  </div>
+  <figure class="qr" id="qr" hidden>
+    <img id="qr-img" alt="QR code to leave a message">
+    <figcaption>Scan to leave a message</figcaption>
+  </figure>
 </section>
 
 <nav class="tools">
@@ -102,6 +121,12 @@ details>div{margin-top:12px}
   <h2 id="p-title">You're at your desk</h2>
   <p class="sub" id="p-sub">The office screen shows this status.</p>
   <p class="unlinked-msg">This phone is not linked yet. On the office screen choose Change status, copy the phone link, send it to yourself and open it here.</p>
+
+  <section id="inbox" hidden>
+    <p class="eyebrow">Messages left at your desk</p>
+    <ul id="notes-list"></ul>
+    <button id="b-clear">Clear messages</button>
+  </section>
 
   <div id="controls">
     <button class="big" id="b-in" aria-pressed="true">I'm at my desk</button>
@@ -132,9 +157,21 @@ details>div{margin-top:12px}
         <input id="f-team" maxlength="24" placeholder="Team name">
         <label for="f-c1">Team colors</label>
         <div class="row"><input type="color" id="f-c1"><input type="color" id="f-c2" aria-label="Second team color"></div>
+        <label for="f-song">Old song or artist (on the record sleeve)</label>
+        <input id="f-song" maxlength="30" dir="auto">
         <label for="f-drink">Favorite drink (sits by the keyboard)</label>
         <select id="f-drink"><option value="coffee">Coffee</option><option value="tea">Tea</option><option value="cola">Cola</option><option value="water">Water</option></select>
         <button id="b-fav">Save favorites</button>
+      </div>
+    </details>
+
+    <details>
+      <summary>Phone alerts for visitor messages</summary>
+      <div>
+        <p class="sub">Visitors scan the code on the office screen to leave you a note. To get a notification on your phone, install the free ntfy app and subscribe to this topic. The alert only says a note arrived; the note itself opens here.</p>
+        <label for="alert-topic">Your alert topic</label>
+        <div class="row"><input id="alert-topic" readonly><button id="b-alert">Copy</button></div>
+        <a id="alert-open" href="#" target="_blank" rel="noopener">Open this topic in ntfy</a>
       </div>
     </details>
 
@@ -146,13 +183,28 @@ details>div{margin-top:12px}
   <p class="note" id="note" role="status"></p>
 </main>
 
+<main class="panel" id="visit">
+  <p class="eyebrow">Desk message</p>
+  <h2 id="v-title">Leave a message</h2>
+  <p class="sub">It goes to their phone, and only they can read it.</p>
+  <form id="v-form">
+    <label for="v-from">Your name</label>
+    <input id="v-from" maxlength="40" autocomplete="name" required>
+    <label for="v-text">Message</label>
+    <textarea id="v-text" maxlength="280" rows="4" required></textarea>
+    <button class="big send" id="v-send">Send message</button>
+  </form>
+  <p class="note" id="v-note" role="status"></p>
+</main>
+
 <script type="module">
 const THREE_URL = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js';
-const RELAY = 'https://ntfy.sh';   // free public relay; it only ever sees encrypted text. Point this at your own ntfy server if you host one.
+const QR_URL = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+const RELAY = 'https://ntfy.sh';   // free public relay; it only sees encrypted text, plus a bare "new message" ping. Point this at your own ntfy server if you host one.
 const FOCUS = ['In a call', 'Focusing'];
 const PLACES = ['Meeting', 'Lunch', 'Break', 'Working from home', 'Out for the day'];
 const DRINKS = ['coffee', 'tea', 'cola', 'water'], MODES = ['in', 'focus', 'away'];
-const DEF = { mode: 'in', where: '', back: '', at: 0, name: 'Yazan', team: '', c1: '#d62839', c2: '#ffffff', drink: 'coffee' };
+const DEF = { mode: 'in', where: '', back: '', at: 0, name: 'Yazan', team: '', c1: '#d62839', c2: '#ffffff', drink: 'coffee', song: 'أغاني زمان', cleared: 0 };
 const HEX = /^#[0-9a-f]{6}$/i;
 const $ = s => document.querySelector(s);
 const root = document.documentElement;
@@ -168,8 +220,11 @@ const clean = d => ({
   c1: HEX.test(d.c1) ? d.c1 : DEF.c1,
   c2: HEX.test(d.c2) ? d.c2 : DEF.c2,
   drink: DRINKS.includes(d.drink) ? d.drink : DEF.drink,
+  song: String(d.song || DEF.song).slice(0, 30),
+  cleared: +d.cleared || 0,   // visitor messages up to this time have been read
 });
 const hhmm = d => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+const stamp = ms => { const d = new Date(ms); return d.toDateString() === new Date().toDateString() ? hhmm(d) : d.toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' }); };
 // "Back in 25 min", "Free around 3:00 PM", "Back any minute", or '' when there is nothing to say.
 function backInfo(s, now = Date.now()) {
   if (!s.back || s.mode === 'in') return '';
@@ -189,14 +244,14 @@ function backInfo(s, now = Date.now()) {
 
 let state = clean(DEF), confirmed = state;   // confirmed = last status the relay accepted or sent
 let sceneApply = null;                       // set once the 3D office is built
-const remote = matchMedia('(max-width: 760px)').matches;
-root.classList.toggle('remote', remote);
+const params = new URLSearchParams(location.hash.slice(1));
+const visitKey = params.get('v');   // present when a visitor scanned the code on the office screen
+const remote = !visitKey && matchMedia('(max-width: 760px)').matches;
+root.classList.toggle('remote', remote); root.classList.toggle('visitor', !!visitKey);
 const note = msg => { $('#note').textContent = msg; };
 
 function apply() {
-  const s = state, at = new Date(s.at), busy = s.mode === 'focus';
-  const when = !s.at ? '' : at.toDateString() === new Date().toDateString() ? hhmm(at)
-    : at.toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' });
+  const s = state, busy = s.mode === 'focus', when = s.at ? stamp(s.at) : '';
   root.dataset.mode = s.mode;
   document.querySelectorAll('[data-name]').forEach(e => { e.textContent = s.name; });
   $('#pill').textContent = { in: 'In the office', focus: 'Do not disturb', away: 'Away' }[s.mode];
@@ -210,23 +265,35 @@ function apply() {
   const fill = (id, v) => { const e = $(id); if (document.activeElement !== e) e.value = v; };
   fill('#back', s.back);
   fill('#where', s.mode !== 'away' || PLACES.includes(s.where) ? '' : s.where);
-  fill('#f-name', s.name); fill('#f-team', s.team); fill('#f-c1', s.c1); fill('#f-c2', s.c2); fill('#f-drink', s.drink);
+  fill('#f-name', s.name); fill('#f-team', s.team); fill('#f-c1', s.c1); fill('#f-c2', s.c2); fill('#f-drink', s.drink); fill('#f-song', s.song);
+  const unread = unreadNotes();
+  $('#badge').hidden = $('#inbox').hidden = !unread.length;
+  $('#badge').textContent = unread.length === 1 ? '1 message waiting' : unread.length + ' messages waiting';
+  $('#notes-list').replaceChildren(...unread.map(n => {
+    const li = document.createElement('li'), who = document.createElement('strong'), time = document.createElement('span'), text = document.createElement('p');
+    who.textContent = n.from; time.textContent = ' · ' + stamp(n.at); text.textContent = n.text;
+    li.append(who, time, text); return li;
+  }));
+  if (visitURL && !remote) drawQR(visitURL + '&n=' + encodeURIComponent(s.name));
   sceneApply?.();
 }
 
 // ---- sync: both devices share one secret (in the link). The status is encrypted with it and passed through the relay. ----
 const LS = 'desk-status', b64 = bytes => btoa(String.fromCharCode(...bytes)), utf8 = new TextEncoder();
-let secret = location.hash.startsWith('#k=') ? location.hash.slice(3) : '';
+const urlsafe = s => s.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+const unb64 = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+const sha = async s => new Uint8Array(await crypto.subtle.digest('SHA-256', utf8.encode(s)));
+const hex = bytes => [...bytes].map(b => b.toString(16).padStart(2, '0')).join('');
+let secret = params.get('k') || '';
 try { if (secret) localStorage.setItem('desk-key', secret); else secret = localStorage.getItem('desk-key') || ''; } catch {}
-if (!secret && !remote) {   // first run on the office screen: make the secret; the phone gets it through the link
-  secret = b64(crypto.getRandomValues(new Uint8Array(16))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+if (!secret && !remote && !visitKey) {   // first run on the office screen: make the secret; the phone gets it through the link
+  secret = urlsafe(b64(crypto.getRandomValues(new Uint8Array(16))));
   try { localStorage.setItem('desk-key', secret); } catch {}
 }
 if (secret && !location.hash) history.replaceState(null, '', '#k=' + secret);   // so a bookmark keeps working
 let topic = '', aes = null;
 const linked = (async () => {
-  const sha = async s => new Uint8Array(await crypto.subtle.digest('SHA-256', utf8.encode(s)));
-  topic = 'desk-' + [...(await sha('topic:' + secret)).slice(0, 12)].map(b => b.toString(16).padStart(2, '0')).join('');
+  topic = 'desk-' + hex((await sha('topic:' + secret)).slice(0, 12));
   aes = await crypto.subtle.importKey('raw', await sha('key:' + secret), 'AES-GCM', false, ['encrypt', 'decrypt']);
 })();
 linked.catch(() => {});
@@ -236,7 +303,7 @@ async function seal(obj) {
   return b64([...iv, ...ct]);
 }
 async function unseal(text) {
-  const u = Uint8Array.from(atob(text), c => c.charCodeAt(0));
+  const u = unb64(text);
   return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: u.slice(0, 12) }, aes, u.slice(12))));
 }
 const remember = () => { confirmed = state; try { localStorage.setItem(LS, JSON.stringify(state)); } catch {} };
@@ -263,6 +330,57 @@ async function connect() {
       if (d.at >= confirmed.at) { state = d; remember(); apply(); }
     } catch {}
   };
+  inbox().catch(() => note('Visitor messages need a newer browser on this device.'));
+}
+
+// ---- visitor messages: the office screen shows a code; a visitor's phone seals a note that only my devices can open ----
+const X = { name: 'X25519' }, PKCS8 = [48, 46, 2, 1, 0, 48, 5, 6, 3, 43, 101, 110, 4, 34, 4, 32];   // header of a PKCS#8 X25519 private key
+const NOTES = 'desk-notes', topicOf = async (label, pub) => `desk-${label}-` + hex((await sha(label + ':' + b64(pub))).slice(0, 12));
+const sharedKey = async (priv, pubBytes) => {   // X25519 agreement, hashed into an AES key
+  const bits = await crypto.subtle.deriveBits({ ...X, public: await crypto.subtle.importKey('raw', pubBytes, X, false, []) }, priv, 256);
+  return crypto.subtle.importKey('raw', await crypto.subtle.digest('SHA-256', bits), 'AES-GCM', false, ['encrypt', 'decrypt']);
+};
+let notes = [], visitURL = '';
+try { notes = JSON.parse(localStorage.getItem(NOTES)) || []; } catch {}
+const unreadNotes = () => notes.filter(n => n.at > state.cleared);
+
+async function sendNote(from, text) {   // runs on the visitor's phone; visitKey is my public key, so the visitor can write but never read
+  const pub = unb64(visitKey), eph = await crypto.subtle.generateKey(X, true, ['deriveBits']), iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, await sharedKey(eph.privateKey, pub), utf8.encode(JSON.stringify({ from, text })));
+  const body = b64([...new Uint8Array(await crypto.subtle.exportKey('raw', eph.publicKey)), ...iv, ...new Uint8Array(ct)]);
+  const r = await fetch(`${RELAY}/${await topicOf('in', pub)}`, { method: 'POST', body });
+  if (!r.ok) throw new Error(r.status);
+  // a bare ping for the ntfy app: no name, no text
+  fetch(RELAY, { method: 'POST', body: JSON.stringify({ topic: await topicOf('alert', pub), title: 'New message at your desk', message: 'Someone left you a note. Tap to read it.', click: location.origin + location.pathname }) }).catch(() => {});
+}
+async function inbox() {   // runs on my devices; the key pair comes from the shared secret, so the screen and the phone hold the same one
+  const priv = await crypto.subtle.importKey('pkcs8', new Uint8Array([...PKCS8, ...await sha('inbox:' + secret)]), X, false, ['deriveBits']);
+  const base = await crypto.subtle.importKey('raw', new Uint8Array([9, ...new Uint8Array(31)]), X, false, []);
+  const pub = new Uint8Array(await crypto.subtle.deriveBits({ ...X, public: base }, priv, 256));   // X25519(private, base point) is the public key
+  visitURL = location.origin + location.pathname + '#v=' + urlsafe(b64(pub));
+  $('#alert-topic').value = await topicOf('alert', pub); $('#alert-open').href = `${RELAY}/${$('#alert-topic').value}`;
+  apply();
+  new EventSource(`${RELAY}/${await topicOf('in', pub)}/sse?since=12h`).onmessage = async e => {
+    try {   // anything not sealed to my key is ignored
+      const m = JSON.parse(e.data), u = unb64(m.message);
+      const d = JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: u.slice(32, 44) }, await sharedKey(priv, u.slice(0, 32)), u.slice(44))));
+      if (notes.some(n => n.id === m.id)) return;
+      notes = [{ id: m.id, at: m.time * 1000, from: String(d.from ?? '').slice(0, 40), text: String(d.text ?? '').slice(0, 280) }, ...notes].sort((a, b) => b.at - a.at).slice(0, 50);
+      try { localStorage.setItem(NOTES, JSON.stringify(notes)); } catch {}
+      apply();
+    } catch {}
+  };
+}
+const loadScript = src => new Promise((ok, fail) => document.head.append(Object.assign(document.createElement('script'), { src, onload: ok, onerror: fail })));
+let qrLib, qrText = '';
+async function drawQR(text) {   // office screen: the code visitors scan
+  if (text === qrText) return;
+  qrText = text;
+  try {
+    await (qrLib ||= loadScript(QR_URL));
+    const q = qrcode(0, 'M'); q.addData(text); q.make();
+    $('#qr-img').src = q.createDataURL(8, 0); $('#qr').dataset.url = text; $('#qr').hidden = false;
+  } catch { qrText = ''; }
 }
 
 // ---- remote controls ----
@@ -277,19 +395,37 @@ PLACES.forEach(l => chip('#chips-away', 'away', l));
 $('#b-in').onclick = () => save({ mode: 'in', where: '', back: '' });
 $('#b-go').onclick = () => save({ mode: 'away', where: $('#where').value.trim(), back: $('#back').value });
 $('#where').onkeydown = e => { if (e.key === 'Enter') $('#b-go').click(); };
-$('#b-fav').onclick = () => save({ name: $('#f-name').value.trim(), team: $('#f-team').value.trim(), c1: $('#f-c1').value, c2: $('#f-c2').value, drink: $('#f-drink').value });
+$('#b-fav').onclick = () => save({ name: $('#f-name').value.trim(), team: $('#f-team').value.trim(), c1: $('#f-c1').value, c2: $('#f-c2').value, drink: $('#f-drink').value, song: $('#f-song').value.trim() });
 $('#gear').onclick = $('#b-close').onclick = () => $('#panel').classList.toggle('open');
 $('#fs').onclick = () => (document.fullscreenElement ? document.exitFullscreen() : root.requestFullscreen()).catch(() => {});
 $('#link').value = location.origin + location.pathname + '#k=' + secret;
 $('#b-copy').onclick = () => navigator.clipboard.writeText($('#link').value).then(() => note('Copied. Send it to your phone and open it there.'), () => { $('#link').select(); note('Select the link and copy it by hand.'); });
+$('#b-clear').onclick = () => save({ cleared: Math.max(...unreadNotes().map(n => n.at)) });
+$('#b-alert').onclick = () => navigator.clipboard.writeText($('#alert-topic').value).then(() => note('Topic copied. In the ntfy app choose Subscribe to topic and paste it.'), () => $('#alert-topic').select());
+if (visitKey) {   // the visitor's page
+  const who = (params.get('n') || '').slice(0, 24), say = msg => { $('#v-note').textContent = msg; };
+  $('#v-title').textContent = who ? `Leave ${who} a message` : 'Leave a message';
+  try { $('#v-from').value = localStorage.getItem('desk-visitor') || ''; } catch {}
+  $('#v-form').onsubmit = async e => {
+    e.preventDefault();
+    const from = $('#v-from').value.trim(), text = $('#v-text').value.trim();
+    if (!from || !text) return say('Add your name and a message.');
+    $('#v-send').disabled = true; say('Sending.');
+    try {
+      await sendNote(from, text);
+      $('#v-text').value = ''; say(`Sent. ${who || 'They'} will see it on their phone.`);
+      try { localStorage.setItem('desk-visitor', from); } catch {}
+    } catch (err) { say(err.name === 'NotSupportedError' || !crypto.subtle ? 'This browser is too old to send the message. Please try another one.' : 'Could not send. Check your internet and try again.'); }
+    $('#v-send').disabled = false;
+  };
+}
 let idle;
 const wake = () => { $('.tools').classList.remove('idle'); clearTimeout(idle); idle = setTimeout(() => $('.tools').classList.add('idle'), 4000); };
 addEventListener('pointermove', wake); wake();
 
 apply();
-connect();
-setInterval(apply, 30000);   // keeps "Back in 25 min" counting down
-if (!remote) initScene().catch(e => console.error('3D office failed to load; the status overlay still works.', e));
+if (!visitKey) { connect(); setInterval(apply, 30000); }   // the interval keeps "Back in 25 min" counting down
+if (!remote && !visitKey) initScene().catch(e => console.error('3D office failed to load; the status overlay still works.', e));
 
 // ---- the 3D office: a dim desk nook lit by a glow behind the monitor, a desk lamp and a mushroom lamp ----
 async function initScene() {
@@ -371,21 +507,22 @@ async function initScene() {
   box(1.5, .03, .3, WOOD, 0, .9, -.82); for (const s of [-1, 1]) box(.03, .12, .28, WOOD, s * .72, .825, -.82);   // monitor riser
   box(1.02, .6, .03, DARK, 0, 1.3, -.875); box(.07, .12, .04, DARK, 0, .975, -.9); box(.3, .015, .16, DARK, 0, .922, -.86); box(.5, .025, .05, DARK, 0, 1.612, -.85);
   const code = screen(.98, .56, 588, 336, 0, 1.3, -.858);
-  for (const s of [-1, 1]) {                                                       // speakers
+  const cones = [];                                                                // speakers; the big cones pulse with the music
+  for (const s of [-1, 1]) {
     box(.2, .32, .2, s < 0 ? '#1c1a19' : '#7a2f22', s * .63, 1.075, -.83);
-    for (const [r, y] of [[.07, 1.02], [.035, 1.16]]) cyl(r, .02, '#0c0c0c', s * .63, y, -.725).rotation.x = Math.PI / 2;
+    for (const [r, y] of [[.07, 1.02], [.035, 1.16]]) { const c = cyl(r, .02, '#0c0c0c', s * .63, y, -.725); c.rotation.x = Math.PI / 2; if (r > .05) cones.push(c); }
   }
   box(.46, .025, .15, '#2a2422', 0, .778, -.32);                                   // keyboard
   for (let r = 0; r < 4; r++) for (let k = 0; k < 13; k++) box(.027, .012, .027, (r * 13 + k) % 7 ? '#e9dfd0' : '#c8553a', -.2 + k * .0335, .796, -.372 + r * .0345);
   gem(.035, DARK, .36, .78, -.32, scene, 1).scale.set(1, .6, 1.4);                  // mouse
-  const tab = new T.Group(); tab.position.set(-.92, .76, -.6); tab.rotation.y = .4; scene.add(tab);                // small screen with the running automation
+  const tab = new T.Group(); tab.position.set(-.92, .76, -.6); tab.rotation.y = .4; tab.scale.setScalar(1.35); scene.add(tab);                // small screen with the running automation
   const tilt = new T.Group(); tilt.position.y = .15; tilt.rotation.x = -.25; tab.add(tilt);
   box(.36, .24, .015, DARK, 0, 0, 0, tilt); box(.1, .02, .1, DARK, 0, .01, -.03, tab);
   const flow = screen(.33, .21, 396, 252, 0, 0, .009, tilt);
   cyl(.09, .02, DARK, 1, .77, -.72); box(.025, .8, .025, DARK, 1, 1.17, -.72); box(.34, .025, .025, DARK, .84, 1.57, -.72);   // desk lamp
   cyl(.11, .14, DARK, .68, 1.5, -.72, scene, .04);
   const bulb = add(new T.SphereGeometry(.035, 12, 10), new T.MeshBasicMaterial({ color: '#ffd9a0' }), .68, 1.44, -.72); bulb.castShadow = false;
-  cyl(.04, .1, '#5b2018', .82, .81, -.5); [['#e8872f', -.012], [CREAM, .008], ['#3f8a4c', .02]].forEach(([c, dx]) => box(.008, .12, .008, c, .82 + dx, .87, -.5 + dx));   // pen cup
+  cyl(.04, .1, '#5b2018', -.62, .81, -.44); [['#e8872f', -.012], [CREAM, .008], ['#3f8a4c', .02]].forEach(([c, dx]) => box(.008, .12, .008, c, -.62 + dx, .87, -.44 + dx));   // pen cup
   box(.13, .08, .06, DARK, -.33, .955, -.76); cyl(.03, .04, '#2a2a2a', -.33, .955, -.72).rotation.x = Math.PI / 2;            // camera
   gem(.04, '#f2c230', .36, .955, -.76, scene, 1); gem(.026, '#f2c230', .36, 1, -.74, scene, 1);                               // rubber duck, for debugging
   add(new T.ConeGeometry(.012, .03, 8), '#e8742a', .36, .998, -.708).rotation.x = Math.PI / 2;
@@ -398,7 +535,9 @@ async function initScene() {
   box(.84, .32, .09, DARK, -.1, 1.975, -.9);
   const sign = screen(.8, .28, 800, 280, -.1, 1.975, -.854);
   const signGlow = glow(1.5, .9, '#ffe2b8', -.1, 1.975, -.84);
-  cyl(.055, .11, DARK, .52, 1.87, -.88); bush(.52, 1.96, -.88, 6, .07, .07);
+  cyl(.12, .006, '#0d0d0d', .55, 1.95, -.945).rotation.x = Math.PI / 2;            // a record peeking out of its sleeve
+  const sleeve = screen(.26, .26, 256, 256, .46, 1.946, -.93, scene, { lit: true });
+  cyl(.05, .1, DARK, .67, 1.865, -.88); bush(.67, 1.95, -.88, 5, .055, .06);
   [['#2a2422', .3], ['#c8402e', .27], [CREAM, .29]].forEach(([c, w], i) => box(w, .035, .19, c, -.82, 2.3125 + i * .036, -.88));   // upper shelf: book stack with a trailing plant
   cyl(.07, .11, CREAM, -.82, 2.458, -.88); bush(-.82, 2.55, -.86, 7, .1, .07);
   vine(-.98, 2.5, -.74, 8, -.012); vine(-.7, 2.5, -.74, 5, .01); vine(-.88, 2.45, -.72, 6);
@@ -422,6 +561,18 @@ async function initScene() {
     box(.012, .16, .13, '#fbf7ef', 1.97, y, z).rotation.x = tiltX; box(.014, .1, .1, c, 1.968, y + .015, z).rotation.x = tiltX;
   });
   box(.16, .02, .5, WOOD, 1.91, 2.6, -.35); cyl(.06, .1, '#b5562f', 1.9, 2.66, -.35); bush(1.9, 2.75, -.35, 5, .07, .06); vine(1.9, 2.6, -.18, 6);
+
+  // ---- record player: old Arabic songs spin while I'm at the desk ----
+  const deck = new T.Group(); deck.position.set(.93, .765, -.4); scene.add(deck);
+  box(.32, .05, .26, '#3d2218', 0, .025, 0, deck); cyl(.105, .012, DARK, -.03, .056, 0, deck);
+  const record = new T.Group(); record.position.set(-.03, .066, 0); deck.add(record);
+  cyl(.1, .006, '#0d0d0d', 0, 0, 0, record); cyl(.036, .008, '#c8402e', 0, 0, 0, record);
+  box(.022, .01, .007, CREAM, .016, 0, 0, record); box(.05, .008, .004, '#3a3a3a', .065, 0, 0, record);          // marks, so the spin shows
+  cyl(.014, .03, '#d9d2c5', .12, .065, -.09, deck); add(new T.BoxGeometry(.007, .007, .15).translate(0, 0, .075), '#d9d2c5', .12, .082, -.09, deck).rotation.y = -.45;   // tonearm
+  const noteTex = (() => { const c = Object.assign(document.createElement('canvas'), { width: 64, height: 64 }), g = c.getContext('2d'); g.fillStyle = '#ffe2b8'; g.font = '52px serif'; g.textAlign = 'center'; g.fillText('♪', 32, 50); return new T.CanvasTexture(c); })();
+  const tunes = [0, 1, 2].map(() => { const m = new T.Mesh(new T.PlaneGeometry(.09, .09), new T.MeshBasicMaterial({ map: noteTex, transparent: true, depthWrite: false })); scene.add(m); return m; });
+  // sticky notes on the monitor: one per unread visitor message
+  const stickies = [[.43, 1.09, .1], [.33, 1.07, -.08], [.44, 1.2, -.05]].map(([x, y, r]) => { const n = box(.075, .075, .004, '#ffd84d', x, y, -.853); n.rotation.z = r; n.castShadow = false; return n; });
 
   // ---- chair ----
   const LEATHER = '#a5562f';
@@ -574,6 +725,30 @@ async function initScene() {
     }
     g.textAlign = 'left'; tex.needsUpdate = true;
   }
+  const DEALS = ['Acme', 'Orbit', 'Nile', 'Petra', 'Zain', 'Atlas'];
+  function drawCRM(t) {   // Bitrix24 deal board; a deal moves on every few seconds
+    const { g, W, H, tex } = flow, step = Math.floor(t / 3) % 6;
+    g.fillStyle = '#eef2f4'; g.fillRect(0, 0, W, H); g.fillStyle = '#2fc6f6'; g.fillRect(0, 0, W, 40);
+    g.fillStyle = '#fff'; g.font = `800 20px ${DISPLAY}`; g.fillText('Bitrix24', 14, 27); g.font = `600 13px ${MONO}`; g.fillText('DEALS', 112, 26);
+    ['New', 'In progress', 'Won'].forEach((name, col) => {
+      const x = 12 + col * 128;
+      g.fillStyle = '#5b6b75'; g.font = `600 12px ${MONO}`; g.fillText(name.toUpperCase(), x, 62);
+      DEALS.filter((_, i) => Math.floor(((i + step) % 6) / 2) === col).forEach((deal, row) => {
+        g.fillStyle = '#fff'; g.beginPath(); g.roundRect(x, 72 + row * 44, 116, 36, 6); g.fill();
+        g.fillStyle = ['#2fc6f6', '#f7a700', '#9dcf00'][col]; g.fillRect(x, 72 + row * 44, 5, 36);
+        g.fillStyle = '#2a343b'; g.font = `600 14px ${DISPLAY}`; g.fillText(deal, x + 14, 95 + row * 44);
+      });
+    });
+    tex.needsUpdate = true;
+  }
+  function drawSleeve() {   // record sleeve for the old Arabic songs
+    const { g, W, H, tex } = sleeve, ARABIC = 'Tahoma, "Segoe UI", sans-serif';
+    g.fillStyle = '#7a1f1a'; g.fillRect(0, 0, W, H); g.strokeStyle = '#e8c27a'; g.lineWidth = 6; g.strokeRect(14, 14, W - 28, H - 28);
+    g.fillStyle = '#e8c27a'; g.textAlign = 'center'; g.direction = 'rtl';
+    fit(g, state.song, 800, 60, ARABIC, W - 60); g.fillText(state.song, W / 2, 128);
+    g.font = `600 28px ${ARABIC}`; g.fillText('طرب أصيل', W / 2, 190);
+    g.direction = 'ltr'; g.textAlign = 'left'; tex.needsUpdate = true;
+  }
   const NIGHT = new T.Color('#141a3c'), DAY = new T.Color('#9fd0f5'), DUSK = new T.Color('#f6a56b');
   function daylight(d) {   // the window follows the real time of day; the room stays dim so the lamps carry the mood
     const h = d.getHours() + d.getMinutes() / 60, k = Math.min(1, Math.max(0, (6.5 - Math.abs(h - 12.5)) / 1.5));
@@ -590,7 +765,8 @@ async function initScene() {
     lamp.intensity = here ? 14 : 0; bulb.material.color.set(here ? '#ffd9a0' : '#3a3029'); face.intensity = here ? .5 : .2;
     chair.rotation.y = here ? 0 : .8; chair.position.z = here ? .1 : .45;
     if (drinkKind !== state.drink) setDrink(drinkKind = state.drink);
-    drawSign(now); drawPoster(); drawCal(now); daylight(now); drawClock(now);
+    drawSign(now); drawPoster(); drawSleeve(); drawCal(now); daylight(now); drawClock(now);
+    const waiting = unreadNotes().length; stickies.forEach((n, i) => { n.visible = i < waiting; });
     if (!here) drawLock(now);
   };
   sceneApply();
@@ -608,7 +784,7 @@ async function initScene() {
     frame = t;
     const now = clockNow(), here = state.mode !== 'away';
     if (now.getSeconds() !== sec) { sec = now.getSeconds(); drawClock(now); if (!here) drawLock(now); if (!sec) { drawSign(now); drawCal(now); daylight(now); } }
-    if (t - tick > .09) { tick = t; drawFlow(t); if (here) typeCode(); }
+    if (t - tick > .09) { tick = t; (t % 24 < 12 ? drawFlow : drawCRM)(t); if (here) typeCode(); }   // the small screen swaps between the automation and Bitrix24
 
     // a 30 s loop: type, glance over the shoulder (not while focusing), type, take a sip
     const cyc = t % 30, pulse = (a, b) => cyc > a && cyc < b ? Math.sin(Math.PI * (cyc - a) / (b - a)) ** 2 : 0;
@@ -622,6 +798,9 @@ async function initScene() {
     drink.userData.steam.forEach((p, i) => { const q = (t * .4 + i / 3) % 1; p.position.set(Math.sin(q * 6 + i) * .02, .14 + q * .22, 0); p.material.opacity = (1 - q) * .5 * (1 - sip); p.scale.setScalar(1 + q); });
     wash.material.opacity = glowLevel * (.82 + Math.sin(t * .8) * .08);   // the glow breathes a little
     signGlow.material.opacity = .22;
+    if (here) record.rotation.y -= .115;   // about 33 rpm at 30 fps
+    const beat = here ? Math.max(0, Math.sin(t * 7)) ** 4 : 0; cones.forEach(c => c.scale.setScalar(1 + beat * .08));
+    tunes.forEach((m, i) => { const q = (t * .25 + i / 3) % 1; m.position.set(.9 + Math.sin(q * 5 + i * 2) * .06, .9 + q * .5, -.4); m.material.opacity = here ? Math.sin(Math.PI * q) * .9 : 0; });
 
     const a = .24 + (still ? 0 : Math.sin(t * .06) * .06);
     cam.position.set(-.15 + Math.sin(a) * 4.6 * zoom, 2.3, -.9 + Math.cos(a) * 4.6 * zoom); cam.lookAt(-.15, 1.6, -.9);
